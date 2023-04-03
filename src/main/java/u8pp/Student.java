@@ -13,6 +13,9 @@ public class Student {
         this.lastName = lastName;
     }
 
+    public String toString(){
+        return "Name: " + firstName + " " + lastName + " Year: " + year;
+    }
     public int getYear() {
         return year;
     }
