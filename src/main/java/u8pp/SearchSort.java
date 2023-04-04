@@ -22,58 +22,22 @@ public class SearchSort {
     }
     
 
-    public static ArrayList<Student> selectionSort(ArrayList<Student> wordInput) {
-        // int nextStudent;
-        // for (int i = 0; i < wordInput.size(); i++){
-        //     nextStudent = i;
-        //     for (int j = 0; j < wordInput.size(); j++){
-        //         if (wordInput.get(j).getYear() > wordInput.get(nextStudent).getYear() ){
-        //             nextStudent = j;
-        //         }
-        //         // else if (wordInput.get(j).getYear() == wordInput.get(nextStudent).getYear() ) {
-        //         //     if (wordInput.get(j).getLastName().compareTo( wordInput.get(nextStudent).getLastName()) < 0 ){
-        //         //         nextStudent = j;
-        //         //     }
-        //         //     else if (wordInput.get(j).getLastName().compareTo( wordInput.get(nextStudent).getLastName()) == 0){
-        //         //         if (wordInput.get(j).getFirstName().compareTo( wordInput.get(nextStudent).getFirstName()) < 0){
-        //         //             nextStudent = j;
-        //         //         }
-        //         //     }
-        //         // }
-        //     }
-        //     if (nextStudent != i){
-        //         Student temp = wordInput.get(nextStudent);
-        //         wordInput.set(nextStudent, wordInput.get(i));
-        //         wordInput.set(i, temp);
-        //     }
-        // }
+    public static ArrayList<Student> selectionSort(ArrayList<Student> word) {
         int Index;
+        ArrayList<Student> wordInput = new ArrayList<>();
+        makeNew(wordInput, word);
         ArrayList<Student> words = new ArrayList<>();
         for (int i = 0; i < wordInput.size(); i++){
             Index = i;
-            for (int j = i; j < wordInput.size(); j++){
-                // if (wordInput.get(Index).getYear() < wordInput.get(j).getYear()){
-                //     Index = j;
-                // }
-                if (wordInput.get(Index).getYear() == wordInput.get(j).getYear()){
-                    if (wordInput.get(Index).getLastName().compareTo( wordInput.get(Index).getLastName()) > 0){
-                        Index = j;
-                    }
-                    else if (wordInput.get(Index).getLastName().compareTo( wordInput.get(Index).getLastName()) == 0){
-                        if (wordInput.get(Index).getFirstName().compareTo( wordInput.get(Index).getFirstName()) > 0){
-                            Index = j;
-                        }
-                    }
-                }
-                else if (wordInput.get(Index).getYear() < wordInput.get(j).getYear()){
+            for (int j   = i; j < wordInput.size(); j++){
+                if (Student.compare(wordInput.get(Index), wordInput.get(j))> 0){
                     Index = j;
                 }
-                // if (numInput[j] < numInput[smallestIndex]){
-                //     smallestIndex = j;
-                // }
             }
             words.add(wordInput.get(Index));
-            // wordInput.remove(Index);
+            if (Index != i){
+                swap(wordInput, Index, i);
+            }
         }
         return words;
     }
@@ -84,23 +48,22 @@ public class SearchSort {
         for (int i = 1; i < input.length; i++) {
             for (int j = i; j > 0; j--) {
                 if (input[j - 1] > input[j]) {
-                    int temp = input[j];
-                    input[j] = input[j - 1];
-                    input[j - 1] = temp;
+                    swap (input, j, j-1);
                 }
             }
         }
     }
 
-    //helper method
-    //swaps to things in a list
-    private static void swap (int[] list, int start, int end){
-        int temp = list[start];
-        list[start] = list[end];
-        list[end] = temp;
-    }
-
-    public static ArrayList<Student> insertionSort(ArrayList<Student> wordInput) {
+    public static ArrayList<Student> insertionSort(ArrayList<Student> word) {
+        ArrayList<Student> wordInput = new ArrayList<>();
+        makeNew(wordInput, word);
+        for (int i = 1; i < wordInput.size(); i++) {
+            for (int j = i; j > 0; j--) {
+                if (Student.compare(wordInput.get(j-1), wordInput.get(j))> 0) {
+                    swap(wordInput, j, j-1);
+                }
+            }
+        }
         return wordInput;
     }
 
@@ -126,9 +89,45 @@ public class SearchSort {
         merge(input, left, right, mid, end - mid);
     }
 
+    public static ArrayList<Student> mergeSort(ArrayList<Student>  wordInput) {
+        ArrayList<Student> input = new ArrayList<>();
+        makeNew(input, wordInput);
+        ArrayList<Student> last = new ArrayList<>();
+        // if (input.size() <= 1){
+            return input;
+        // }
+        // else{
+        //     ArrayList<Student> left = new ArrayList<>();
+        //     ArrayList<Student> right = new ArrayList<>();
+        //     for (int i = 0; i < input.size()/2; i++){
+        //         left.add(input.get(i));
+        //     }
+        //     for (int i = input.size()/2; i < input.size(); i++){
+        //         left.add(input.get(i));
+        //     }
+        //     mergeSort(left);
+        //     mergeSort(right);
+        //     merge(last, left, right);
+        // }
+        // return last;
+    }
+
+    //helper method
+    //swaps to things in a list
+    private static void swap (int[] list, int start, int end){
+        int temp = list[start];
+        list[start] = list[end];
+        list[end] = temp;
+    }
+    private static void swap(ArrayList<Student> list, int start, int end){
+        Student temp =  list.get(start);
+        list.set(start, list.get(end));
+        list.set(end, temp);
+    }
+
     //Helper method
     //does the reverse merging 
-    public static void merge(int[] input, int[] left, int[] right, int mid, int halfMid) {
+    private static void merge(int[] input, int[] left, int[] right, int mid, int halfMid) {
         int i = 0;
         int j = 0;
         int k = 0;
@@ -148,7 +147,30 @@ public class SearchSort {
         }
     }
 
-    public static ArrayList<Student> mergeSort(ArrayList<Student>  wordInput) {
-        return wordInput;
+    private static void merge(ArrayList<Student> last, ArrayList<Student> left, ArrayList<Student> right) {
+        for (int i= 0 ; i<left.size(); i++){
+            for (int j = 0; j<right.size(); j++){
+                if (Student.compare(left.get(i), right.get(j))> 0) {
+                    last.add(left.get(i));
+                    left.remove(i);
+                    last.add(right.get(j));
+                    right.remove(j);
+                }
+                else{
+                    last.add(right.get(j));
+                    right.remove(j);
+                    last.add(left.get(i));
+                    left.remove(i);
+                }
+            }
+        }
+    }
+
+    //helper method 
+    //makes a new list so that it doesnt modify the og
+    private static void makeNew(ArrayList<Student> neww, ArrayList<Student> og){
+        for (int i = 0; i < og.size(); i++){
+            neww.add(og.get(i));
+        }
     }
 }
